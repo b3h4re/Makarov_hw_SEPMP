@@ -10,7 +10,7 @@ class Graph:
     def add_connection(self, start, end, weight=0):
         self._core[start].add((end, weight) if self._weighed else end)
         if not self._oriented:
-            self._core[end].add((start, weight) if self._weighed else end)
+            self._core[end].add((start, weight) if self._weighed else start)
 
     def __getitem__(self, item):
         return self._core[item]
