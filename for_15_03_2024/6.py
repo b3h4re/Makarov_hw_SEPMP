@@ -1,20 +1,17 @@
 from collections import deque
-
 from graph import Graph
 
 
-def bfs(graph, start, dist):
+def path(graph, start, dist):
     q = deque()
     q.append(start)
-    visited = {start}
     dist[start] = 0
     while len(q) > 0:
         vertex = q.popleft()
         for neighbor in graph[vertex]:
-            if neighbor not in visited:
-                visited.add(neighbor)
-                q.append(neighbor)
+            if dist[neighbor] is None:
                 dist[neighbor] = dist[vertex] + 1
+                q.append(neighbor)
 
 
 f = open("inputs/6.txt", "r")
@@ -26,5 +23,5 @@ for _ in range(m):
 f.close()
 
 dist = [None] * n
-bfs(g, 0, dist)
-print(*dist, sep='\n')
+path(g, 0, dist)
+print(*dist, sep="\n")
