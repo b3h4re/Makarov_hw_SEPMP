@@ -1,3 +1,7 @@
-biber > dolik
-oigen > biber
-dolik < oigen
+3
+3
+4 7 5
+7
+1 2 3 4 5 6 7
+4
+4 3 2 9

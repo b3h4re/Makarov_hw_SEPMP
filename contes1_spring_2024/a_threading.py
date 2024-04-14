@@ -1,5 +1,6 @@
 from collections import deque
 from heapq import heappush
+import threading
 
 
 def bfs(g, start, ans, elem):
@@ -11,19 +12,13 @@ def bfs(g, start, ans, elem):
     while len(q) > 0:
         v = q.popleft()
         for child in [2*v + 1, 2*v + 2]:
-            if child < len(g):
-                if elem <= - g[child]:
-                    ans += g[child]
-                    q.append(child)
+            if child < len(g) and elem <= - g[child]:
+                ans += g[child]
+                q.append(child)
     return ans
 
 
-t = int(input())
-
-for test in range(1, t+1):
-    n = int(input())
-    ladder = list(map(int, input().split()))
-
+def get_ans(number, n, ladder):
     heap = [-ladder[0]]
     s = ladder[0]
     res = 0
@@ -42,4 +37,17 @@ for test in range(1, t+1):
             res += bfs(heap, 0, s, ladder[i])
             heappush(heap, -ladder[i])
         s += ladder[i]
-    print(res)
+    ans.append((number, res))
+
+
+t = int(input())
+
+ans = []
+for i in range(t):
+    n = int(input())
+    ladder = list(map(int, input().split()))
+    thread = threading.Thread(target=get_ans, args=(i, n, ladder))
+    thread.start()
+ans.sort(key=(lambda x: x[0]))
+for _, e in ans:
+    print(e)
