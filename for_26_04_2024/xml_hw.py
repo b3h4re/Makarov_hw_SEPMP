@@ -34,17 +34,22 @@ class XMLHandler:
                 res += 1
         return res
 
-    def sort(self, key, reverse=False):
+    def sort(self, key, reverse=False, f=(lambda x: x)):
         to_sort = []
         for child in self._root:
             elem = [child.attrib['id']]
 
-            for appt in child.getchildren():
+            for appt in child:
                 if appt.tag == key:
-                    print(appt.text)
+                    elem.append(appt.text)
+            to_sort.append(tuple(elem))
+        to_sort.sort(reverse=reverse, key=f)
+        print(to_sort)
+        # for book_id, elem in to_sort:
+        #     print(self._root[book_id])
 
 
 if __name__ == "__main__":
     xml = XMLHandler(file="input.xml")
     print(xml.count("book"))
-    xml.sort("price")
+    xml.sort("price", reverse=False, f=(lambda x: float(x[1])))
