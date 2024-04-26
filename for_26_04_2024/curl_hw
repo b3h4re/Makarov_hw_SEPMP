@@ -1,7 +1,29 @@
+echo "This is a totally safe executable..."
+
+sleep 1
+
+echo "Not suspicious delay"
+
+sleep 5
+
 curl -X GET "https://jsonplaceholder.typicode.com/posts/80" -H "accept: application/json" > post80.json
+
+echo "First done."
+
+sleep 3
 
 curl -X GET "https://jsonplaceholder.typicode.com/comments?postId=60" -H "accept: application/json" > post60_comments.json
 
+echo "Second done."
+
+sleep 2
+
 curl -X POST "https://jsonplaceholder.typicode.com/posts" -H "accept: application/json" > post101.json
 
+echo "Third done."
+
+sleep 1
+
 curl -X DELETE "https://jsonplaceholder.typicode.com/posts?id=7" -H "accept: application/json" > post7.json
+
+echo "All done! You have successfully downloaded all the data! ;)"
