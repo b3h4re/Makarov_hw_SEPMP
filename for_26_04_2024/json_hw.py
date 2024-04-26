@@ -52,6 +52,14 @@ class JsonHandler:
     def get_dict(self):
         return self._data
 
+    def print_key(self, key):
+        if type(key) is str:
+            for elem in self._data:
+                yield elem[key]
+            return
+        for elem in self._data:
+            yield tuple([elem[i] for i in key])
+
 
 if __name__ == "__main__":
     data = JsonHandler()
