@@ -1,0 +1,7 @@
+curl -X GET "https://jsonplaceholder.typicode.com/posts/80" -H "accept: application/json" > post80.json
+
+curl -X GET "https://jsonplaceholder.typicode.com/comments?postId=60" -H "accept: application/json" > post60_comments.json
+
+curl -X POST "https://jsonplaceholder.typicode.com/posts" -H "accept: application/json" > post101.json
+
+curl -X DELETE "https://jsonplaceholder.typicode.com/posts?id=7" -H "accept: application/json" > post7.json
