@@ -1,0 +1,8 @@
+#!/home/lev/Documents/it/Makarov_hw_SEPMP/MakarovLevEvgenievich_03.05/task_4/db_task_env/bin/python
+# -*- coding: utf-8 -*-
+import re
+import sys
+from pip._internal.cli.main import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())

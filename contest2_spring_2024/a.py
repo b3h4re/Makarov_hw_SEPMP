@@ -1,29 +1,55 @@
-def ford_bellman(l, e, start, n):
-    dist = [1] * n
-    parents = [-1] * n
-    dist[start] = 0
-    for i in range(1, n):
-        for u, v in e:
-            if dist[v] > dist[u] + l[u][v]:
-                dist[v] = dist[u] + l[u][v]
-                parents[v] = u
-    for u, v in e:
-        if dist[v] > dist[u] + l[u][v]:
+from heapq import heappush, heappop
+
+
+class Inf:
+    def __init__(self, negative=False):
+        self._negative = negative
+
+    def __lt__(self, other):
+        return self._negative
+
+    def __le__(self, other):
+        return self._negative
+
+    def __ge__(self, other):
+        return not self._negative
+
+    def __gt__(self, other):
+        return not self._negative
+
+    def __str__(self):
+        return ('-' if self._negative else '') + 'INF'
+
+    def __eq__(self, other):
+        if other is Inf:
             return True
-    return False
+        return False
+
+
+def find_cycle(graph, start, heap):
+    visited = set()
+    color = [0] * n
+    dist = [INF for _ in range(n)]
+    dist[start] = 0
+    heappush(heap, start)
+    while len(heap) > 0:
+        node = heappop(heap)
+
+
+
+INF = Inf()
 
 
 n, m = map(int, input().split())
-lengths = [[None for _ in range(n)] for __ in range(n)]
-edges = set()
+g = [set() for _ in range(n)]
 
 for _ in range(m):
     x, y, t = map(int, input().split())
-    lengths[x][y] = t
-    edges.add((x, y))
+    g[x].add((y, t))
 
-
-if ford_bellman(lengths, edges, 0, n):
-    print('yes')
+for start in range(n):
+    if find_cycle(g, start, []):
+        print("yes")
+        break
 else:
-    print('no')
+    print("no")
