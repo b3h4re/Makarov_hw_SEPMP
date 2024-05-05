@@ -44,9 +44,11 @@ INF = int(1e12)
 
 f = open("input.txt", "r")
 tests = int(f.readline())
-output = open('output.txt', "w")
+
+ans = []
 for test in range(1, tests+1):
     n = int(f.readline())
+    ans.append([])
     city_coordinates = [(None, None)]
     for i in range(n):
         xi, yi = map(int, f.readline().split())
@@ -81,11 +83,19 @@ for test in range(1, tests+1):
         while connection is None or connected[connection[3]]:
             connection = heappop(dists)
         # print(connection[1], connection[2])
-        output.write(f"{connection[1]} {connection[2]}\n")
+        # output.write(f"{connection[1]} {connection[2]}\n")
+        ans[-1].append(
+            (min(connection[1], connection[2]), max(connection[1], connection[2]))
+        )
         joined += 1
         connected[connection[3]] = True
         comp = connection[3]
-    output.write("\n")
-
-output.close()
+    ans[-1].sort()
+    # output.write("\n")
 f.close()
+output = open('output.txt', "w")
+for elem in ans:
+    for con in elem:
+        output.write(f"{con[0]} {con[1]}\n")
+    output.write("\n")
+output.close()

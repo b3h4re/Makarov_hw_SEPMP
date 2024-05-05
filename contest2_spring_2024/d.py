@@ -1,4 +1,4 @@
-INF = int(1e12)
+INF = int(1e15)
 
 
 def rho2(a, b):
@@ -42,4 +42,7 @@ if __name__ == "__main__":
             ps.append(tuple(map(int, input().split())))
         process_test(satellites, ps, ans)
     for elem in ans:
-        print(elem)
+        if elem[-1] == elem[-2] == '0':
+            print(elem[:-1])
+        else:
+            print(elem)
