@@ -90,7 +90,7 @@ for test in range(1, tests+1):
         joined += 1
         connected[connection[3]] = True
         comp = connection[3]
-    ans[-1].sort()
+    ans[-1].sort(key=(lambda x: x[0]))
     # output.write("\n")
 f.close()
 output = open('output.txt', "w")
