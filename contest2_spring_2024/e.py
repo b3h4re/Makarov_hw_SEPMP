@@ -47,7 +47,7 @@ def adjust_flows(end, flow, flows, parent):
     flows[end][parent[end]] += flow
 
 
-def find_flow(graph, start,  end):
+def find_flow(graph, start, end):
     res = 0
     flows = [[graph[j][i] for i in range(len(graph))] for j in range(len(graph))]
     while True:

@@ -1,22 +1,77 @@
 from contest2_spring_2024.f import process_test
 from test_data.test_data_f import TestDataF
+from time import perf_counter
 
 
 class TestF:
-    def test_correct_answer_1(self):
-        rows, cols, cut = TestDataF.rows_cols_cut_1
-        inp = TestDataF.inp_1
-        ans = TestDataF.ans_1
-        assert ans == process_test(rows, cols, inp, cut), "Wrong Answer"
+    def test_f(self):
+        for i in range(len(TestDataF.rows_cols_cut_data)):
+            rows, cols, cut = TestDataF.rows_cols_cut_data[i]
+            inp = TestDataF.input_data[i]
+            ans = TestDataF.answers[i]
+            assert ans == process_test(rows, cols, inp, cut), f"Wrong Answer for test {i+1}"
 
-    def test_correct_answer_2(self):
-        rows, cols, cut = TestDataF.rows_cols_cut_2
-        inp = TestDataF.inp_2
-        ans = TestDataF.ans_2
-        assert ans == process_test(rows, cols, inp, cut), "Wrong Answer"
+    def test_f_time(self):
+        rows, cols = 300, 300
+        tmp = []
+        for i in range(rows):
+            tmp.append(str(i))
+            tmp.append(str(i))
+        cut = len(tmp) // 2
+        inp = ' '.join(tmp)
+        ans = min(rows, cols)
+        max_time = 1
+        start = perf_counter()
+        result = process_test(rows, cols, inp, cut)
+        end = perf_counter()
+        assert ans == result, "Wrong answer on time check"
+        assert end - start < max_time, f"Program took {end - start} seconds!"
 
-    def test_correct_answer_3(self):
-        rows, cols, cut = TestDataF.rows_cols_cut_3
-        inp = TestDataF.inp_3
-        ans = TestDataF.ans_3
-        assert ans == process_test(rows, cols, inp, cut), "Wrong Answer"
+    @staticmethod
+    def _get_fields():
+        coordinates = {
+            0: (0, 0), 1: (0, 1), 2: (0, 2),
+            3: (1, 0), 4: (1, 1), 5: (1, 2),
+            6: (2, 0), 7: (2, 1), 8: (2, 2),
+            9: (3, 0), 10: (3, 1), 11: (3, 2)
+        }
+        power = 12
+        for x in range(2**power):
+            cuts = bin(x)[2:].zfill(power)
+            cuts_coordinates = ''
+            for i in range(power):
+                if cuts[i] == '1':
+                    xi, yi = coordinates[i]
+                    if len(cuts_coordinates) > 0:
+                        cuts_coordinates += ' '
+                    cuts_coordinates += str(xi) + ' ' + str(yi)
+            yield cuts_coordinates
+
+    @staticmethod
+    def _get_placements(rows, cols, cuts, placed):
+        for i in range(rows):
+            for j in range(cols):
+                if (i, j) in cuts:
+                    continue
+                for x, y in placed:
+                    if x == i or y == j:
+                        break
+                else:
+                    yield i, j
+
+    def _get_solution_slow(self, rows, cols, cuts, placed):
+        placements = list(self._get_placements(rows, cols, cuts, placed))
+        if len(placements) == 0:
+            return len(placed)
+        rt = -1
+        for p in placements:
+            rt = max(rt, self._get_solution_slow(rows, cols, cuts, placed + [p]))
+        return rt
+
+    def test_f_4_3(self):
+        for cut_input in self._get_fields():
+            tmp = list(map(int, cut_input.split()))
+            cuts = set([(tmp[i], tmp[i+1]) for i in range(0, len(tmp), 2)])
+            ans = self._get_solution_slow(4, 3, cuts, [])
+            assert ans == process_test(4, 3, cut_input, len(cuts)), \
+                f"1\n4 3 {len(cuts)}\n{cut_input}"
