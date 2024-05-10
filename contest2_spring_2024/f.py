@@ -57,7 +57,7 @@ def find_flow(graph, start, end, num_rows, num_cols):
     res = 0
     # flows = [[graph[j][i] for i in range(len(graph))] for j in range(len(graph))]
     flows = ([num_rows] + [len(graph[i]) for i in range(num_rows)] +
-             [1 for _ in range(num_cols)] + []) # TODO flows array properly
+             [1 for _ in range(num_cols)] + [])  # TODO flows array properly
     while True:
         used = [False] * (end + 1)
         parent = [-1] * (end + 1)
