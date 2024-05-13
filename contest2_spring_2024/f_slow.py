@@ -1,7 +1,7 @@
 from collections import deque
 
 
-def bfs(start, end, parent, used, flows, connections):
+def bfs(graph, start, end, parent, used, flows):
     q = deque()
     q.append(start)
     used[start] = True
@@ -9,8 +9,8 @@ def bfs(start, end, parent, used, flows, connections):
         vertex = q.popleft()
         if vertex == end:
             return
-        for neighbor in connections[vertex]:
-            if not used[neighbor] and flows[vertex][neighbor] > 0:
+        for neighbor in range(len(graph)):
+            if flows[vertex][neighbor] > 0 and not used[neighbor]:
                 used[neighbor] = True
                 parent[neighbor] = vertex
                 q.append(neighbor)
@@ -25,29 +25,24 @@ def get_flow(end, parent, flows):
     return min(flows[parent[end]][end], get_flow(parent[end], parent, flows))
 
 
-def adjust_flows(end, flow, flows, parent, connections):
+def adjust_flows(end, flow, flows, parent):
     if parent[end] == -1:
         return
-    adjust_flows(parent[end], flow, flows, parent, connections)
+    adjust_flows(parent[end], flow, flows, parent)
     flows[parent[end]][end] -= flow
     flows[end][parent[end]] += flow
-    if flows[parent[end]][end] <= 0:
-        connections[parent[end]].discard(end)
-    if flows[end][parent[end]] > 0:
-        connections[end].add(parent[end])
 
 
-def find_flow(flows, start, end, connections):
+def find_flow(graph, start, end):
     res = 0
-    # flows = [[graph[j][i] for i in range(len(graph))] for j in range(len(graph))]
-
+    flows = [[graph[j][i] for i in range(len(graph))] for j in range(len(graph))]
     while True:
-        used = [False] * len(flows)
-        parent = [-1] * len(flows)
-        bfs(start, end, parent, used, flows, connections)
+        used = [False] * len(graph)
+        parent = [-1] * len(graph)
+        bfs(graph, start, end, parent, used, flows)
 
         flow = get_flow(end, parent, flows)
-        adjust_flows(end, flow, flows, parent, connections)
+        adjust_flows(end, flow, flows, parent)
 
         if flow is None:
             break
@@ -61,26 +56,19 @@ def process_test(num_rows, num_cols, cuts, num_cuts):
     cuts = list(map(int, cuts.split()))
     n = 2 + num_rows + num_cols
     graph = [[0 for __ in range(n)] for _ in range(n)]
-    connections = [set() for _ in range(n)]
 
     for i in range(1, num_rows+1):
         graph[0][i], graph[i][0] = 1, 1
-        connections[0].add(i)
-        connections[i].add(0)
     for i in range(num_cols):
         graph[-1][1+num_rows+i], graph[1+num_rows+i][-1] = 1, 1
-        connections[len(graph) - 1].add(1+num_rows+i)
-        connections[1+num_rows+i].add(len(graph) - 1)
     for row in range(num_rows):
         for col in range(num_cols):
             graph[1+row][1+num_rows+col] = 1
-            connections[1 + row].add(1 + num_rows + col)
     for i in range(num_cuts):
         row, col = cuts[2 * i], cuts[2 * i + 1]
         graph[1 + row][1 + num_rows + col] = 0
-        connections[1 + row].discard(1 + num_rows + col)
 
-    return find_flow(graph, 0, n - 1, connections)
+    return find_flow(graph, 0, n - 1)
 
 
 if __name__ == "__main__":
