@@ -1,19 +1,9 @@
-import contextlib
 import random
-from typing import Generator, Any
 
 from contest3_spring_2024.a import process_test
 from time import perf_counter
 
-
-@contextlib.contextmanager
-def rand_state(seed: int | None = None) -> Generator:
-    state: tuple[Any, ...] = random.getstate()
-    random.seed(seed)
-    try:
-        yield
-    finally:
-        random.setstate(state)
+from context_managers import rand_state
 
 
 class TestA:
